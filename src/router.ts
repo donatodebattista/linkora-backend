@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { createAccount } from "./handlers/index";
 
 const router = Router()
 
@@ -8,13 +9,7 @@ router.get('/', (req, res) => {
 })
 
 // AUTH y REGISTRO
-router.post('/auth/register', (req, res) => {
-    console.log(req.body)
-})
-
-router.post('/auth/login', (req, res) =>{
-    res.send('Seccion login')
-})
+router.post('/auth/register', createAccount)
 
 
 
