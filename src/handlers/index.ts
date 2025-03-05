@@ -1,4 +1,4 @@
-import type { Request, Response } from 'express' //Para evitar type any en req y res
+import type { Request, Response } from 'express'
 import slug from 'slug'
 import User from '../models/User'
 import { hashPassword } from '../utils/auth'
@@ -9,12 +9,12 @@ export const createAccount = async (req: Request, res: Response) => {
         const userExist = await User.findOne({email})
         if (userExist){
             const error = new Error('El correo ingresado ya se encuentra registrado')
-            res.status(409).json({error : error.message})
-            return
+            res.status(409).json({error : error.message}) 
+            return  
         } 
         
-        
-        const handle = slug(req.body.handle, '')
+        const handle = slug(req.body.handle, '-')
+
         const handleExist = await User.findOne({handle})
         if (handleExist){
             const error = new Error('El nombre de usuario no esta disponible')
