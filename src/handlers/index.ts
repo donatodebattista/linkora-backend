@@ -4,13 +4,8 @@ import slugify from 'slugify'
 import User from '../models/User'
 import { hashPassword, checkpassword } from '../utils/auth'
 
+
 export const createAccount = async (req: Request, res: Response) => {
-        //Manejo de error validacion de datos
-        let errors = validationResult(req)
-        if(! errors.isEmpty()){
-            res.status(400).json({errors: errors.array()})
-            return
-        }
         
         //Manejo de error si el usuario ya existe
         const {email, password, handle} = req.body
@@ -41,13 +36,6 @@ export const createAccount = async (req: Request, res: Response) => {
 
 
 export const login = async (req: Request, res: Response) => {
-    //Manejo de error validacion de datos
-    let errors = validationResult(req)
-    if(! errors.isEmpty()){
-        res.status(400).json({errors: errors.array()})
-        return
-    }
-
 
     //Revisar si el usuario existe
     const {email, password} = req.body
