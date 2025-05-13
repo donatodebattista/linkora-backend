@@ -1,15 +1,15 @@
 import { Router } from "express";
 import { body } from "express-validator";
 import { createAccount } from "./handlers/index";
+import { login } from "./handlers/index";
 
 const router = Router()
-
 
 router.get('/', (req, res) => {
     res.send("HOME")
 })
 
-// AUTH y REGISTRO
+//REGISTRO
 router.post('/auth/register',
     body('handle')
         .notEmpty()
@@ -29,5 +29,17 @@ router.post('/auth/register',
     
     createAccount)
 
+
+//LOGIN
+router.post('/auth/login',
+    body('email')
+        .isEmail()
+        .withMessage('Email no valido'),
+    body('password')
+        .notEmpty()
+        .withMessage('El password debe ser obligatorio'),
+
+    
+    login)
 
 export default router
