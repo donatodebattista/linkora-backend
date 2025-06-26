@@ -3,6 +3,7 @@ import { validationResult } from 'express-validator'
 import slugify from 'slugify'
 import User from '../models/User'
 import { hashPassword, checkpassword } from '../utils/auth'
+import { generateJWT } from '../utils/jwt'
 
 
 export const createAccount = async (req: Request, res: Response) => {
@@ -54,5 +55,7 @@ export const login = async (req: Request, res: Response) => {
         return
     }
 
-    res.send('Autenticado...')
+    //Generar JWT y enviarlo al cliente
+    const token = generateJWT({id: user._id})
+    res.send(token)
 }
