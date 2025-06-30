@@ -1,6 +1,14 @@
 import type { Request, Response } from 'express'
 import { validationResult } from 'express-validator'
 import slugify from 'slugify'
+import type { IUser } from '../models/User'
+
+declare global {
+    namespace Express {
+        interface Request {
+            user?: IUser
+        }}}
+
 import User from '../models/User'
 import { hashPassword, checkpassword } from '../utils/auth'
 import { generateJWT } from '../utils/jwt'
@@ -58,4 +66,11 @@ export const login = async (req: Request, res: Response) => {
     //Generar JWT y enviarlo al cliente
     const token = generateJWT({id: user._id})
     res.send(token)
+}
+
+
+export const getUser = async (req: Request, res: Response) => {
+    res.json(req.user)
+
+
 }
