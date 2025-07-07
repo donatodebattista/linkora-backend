@@ -55,6 +55,7 @@ export const login = async (req: Request, res: Response) => {
         return
     }
 
+
     //Revisar si la contraseña es correcta
     const match = await checkpassword(password, user.password)
     if(!match){
