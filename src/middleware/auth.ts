@@ -28,7 +28,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
   try {
     const result = jwt.verify(token, process.env.JWT_SECRET);
     if (typeof result === "object" && result.id) {
-      const user = await User.findById(result.id).select("handle name email");
+      const user = await User.findById(result.id).select("handle name email description");
       if (!user) {
         const error = new Error("El usuario no existe");
         res.status(404).json({ error: error.message });
