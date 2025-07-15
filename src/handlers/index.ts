@@ -2,6 +2,9 @@ import type { Request, Response } from 'express'
 import { validationResult } from 'express-validator'
 import slugify from 'slugify'
 import type { IUser } from '../models/User'
+import {formidable} from 'formidable'
+import  cloudinary  from '../config/cloudinary'
+import { v4 as uuid } from 'uuid'
 
 declare global {
     namespace Express {
@@ -94,6 +97,35 @@ export const updateProfile = async (req: Request, res: Response) => {
 
     } catch (e) {
         const error = new Error('Error al actualizar los datos del perfil')
+        res.status(500).json({error: error.message})
+    }
+}
+
+
+export const uploadImage = async (req: Request, res: Response) => {
+    const form = formidable({ multiples: false })
+    
+    
+    try {
+        form.parse(req, (err, fields, files) => {
+
+            cloudinary.uploader.upload(files.file[0].filepath, { public_id: uuid() }, async function(error, result) {
+                if (error) {
+                    const error = new Error('Error al subir la imagen a Cloudinary')
+                    return res.status(500).json({error: error.message})
+                }
+
+                if(result){
+                    req.user.image = result.secure_url
+                    await req.user.save()
+                    res.json({image: result.secure_url})
+                }
+            })
+        })
+
+
+    } catch (e) {
+        const error = new Error('Algo salio mal: error al subir la imagen')
         res.status(500).json({error: error.message})
     }
 }
