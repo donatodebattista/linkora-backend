@@ -2,7 +2,6 @@ import { CorsOptions } from "cors";
 
 export const corsConfig : CorsOptions = {
   origin: function (origin, callback){
-
     //Permitir acceso a peticiones desde thunderClient cuando se inicia el servidor con dev:api
     const allowedOrigins = [process.env.FRONTEND_URL];
     if (process.argv[2] === '--api'){
