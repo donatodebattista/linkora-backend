@@ -83,7 +83,7 @@ export const updateProfile = async (req: Request, res: Response) => {
         const { description, links } = req.body
         const handle = slugify(req.body.handle)
         const handleExist = await User.findOne({handle: handle})
-        if (handleExist && handleExist.email !== req.user.email){
+        if (handleExist && handleExist._id.toString() !== req.user._id.toString()){
             const error = new Error('El nombre de usuario ya existe')
             res.status(409).json({ error: error.message })
             return
@@ -108,11 +108,21 @@ export const uploadImage = async (req: Request, res: Response) => {
     
     try {
         form.parse(req, (err, fields, files) => {
+            if (err) {
+                return res.status(500).json({error: 'Error al procesar el archivo'})
+            }
 
-            cloudinary.uploader.upload(files.file[0].filepath, { public_id: uuid() }, async function(error, result) {
+            const fileArray = files.file as any
+            if (!fileArray || fileArray.length === 0) {
+                return res.status(400).json({error: 'No se envió ninguna imagen'})
+            }
+
+            const filepath = fileArray[0].filepath
+
+            cloudinary.uploader.upload(filepath, { public_id: uuid() }, async function(error, result) {
                 if (error) {
-                    const error = new Error('Error al subir la imagen a Cloudinary')
-                    return res.status(500).json({error: error.message})
+                    const uploadError = new Error('Error al subir la imagen a Cloudinary')
+                    return res.status(500).json({error: uploadError.message})
                 }
 
                 if(result){
