@@ -53,6 +53,14 @@ router.patch('/user',
     body('handle')
         .notEmpty()
         .withMessage('El handle no puede ir vacio'),
+    body('description')
+        .optional()
+        .isString()
+        .withMessage('La descripción debe ser texto'),
+    body('links')
+        .optional()
+        .isString()
+        .withMessage('Los enlaces deben ser un string JSON válido'),
     handleInputErrors,
     authenticate,
     updateProfile
